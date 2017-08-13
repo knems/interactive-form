@@ -127,6 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
 		selected == "other" ? otherTitle.style.display = "" : otherTitle.style.display = "none";
 	});
 
+	let letters = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+	let isNotValidEmail = (node) => {
+			return !letters.test(node.value);
+	}
+
+	let setNodeBorderRed = (node) => {
+		return node.style['box-shadow'] = '0 0 5px 2px red';
+	}
+
+	email.addEventListener("keyup", (e) => {
+		if(isNotValidEmail(email)){
+			setNodeBorderRed(email);
+		}else{
+			email.style['box-shadow'] = '';
+		}
+	});
+
 	const activityInputs = activities.getElementsByTagName('input');
 	const paymentOptions = paymentMethod.getElementsByTagName('option');
 
@@ -136,10 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		let activitiesInput = false;
 		let activityLegend = activities.children[0];
 		let numbers = /^[0-9]+$/;
-		let letters = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 		let errorAlert = '';
 
+		//func to build error message, called when nodes do not meet validation
 		let errorMessage = (msg) => {
 			if(errorAlert.length != 0){
 				errorAlert += ', ';
@@ -151,14 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				return !node.value.match(numbers);
 			}
 
-		let isNotValidEmail = (node) => {
-				return !letters.test(node.value);
-		}
-
-		let setNodeBorderRed = (node) => {
-			return node.style['box-shadow'] = '0 0 5px 2px red';
-		}
-
 		let isValid = (x, condition) => {
 			if(isNotValidNumber(x) || condition){
 				setNodeBorderRed(x);
@@ -167,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 
+		//beginning of input checks
 		if(isNotValidEmail(email)){
 			errorMessage("Email is not valid");
 			setNodeBorderRed(email);
@@ -196,10 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		!activitiesInput ? activityLegend.style.color = 'red' : activityLegend.style.color = '#184f68';
 
+		//ended error message
 		if(errorAlert != ''){
 			alert(errorAlert += '.');
 		}
 
+		//returns view back to the very top of the doucment
 		scroll(0,0);
 	});
 });

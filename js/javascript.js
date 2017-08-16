@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	submitButton.addEventListener('click', (e) => {
-		e.preventDefault();
+		//e.preventDefault();
 		let msg = '';
 		let activitiesInput = false;
 		let activityLegend = activities.children[0];

@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const activitiesCostTotalElement = document.getElementById('activitiesCostTotal');
 
 	const paymentMethod = document.getElementById('payment');
-	// const creditCardPayment = document.getElementById('credit-card');
-	// const bitcoinMessage = document.getElementById('bitcoin message');
-	// const paypalMessage = document.getElementById('paypal message');
+
+	const activityInputs = activities.getElementsByTagName('input');
+	const paymentOptions = paymentMethod.getElementsByTagName('option');
 
 	const name = document.getElementById('name');
 	const email = document.getElementById('mail');
@@ -26,9 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	const $colors_js_puns = $("#colors-js-puns");
 	const $other_title = $("#other-title");
 
+	const $creditCardPayment = $("#credit-card");
+	const $paypalMessage = $("[id='paypal message']");
+	const $bitcoinMessage = $("[id='bitcoin message']");
+
 	document.getElementById('name').select();
 	//set the default value of the payment selector to 'credit card'
 	paymentMethod.value = "credit card";
+	$paypalMessage.hide();
+	$bitcoinMessage.hide();
 
 	//hide t-shirt design colors
 	//wait until shirt design is selected before displayed
@@ -69,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	let activitiesCostTotal = 0;
 	//function to enabled / disable checkboxes when times and days are contradicting
 	activities.addEventListener("change", (e) => {
-
 		//target checkbox
 		let checkboxChecked = e.target.checked;
 		//checkbox name
@@ -112,19 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		activitiesCostTotalElement.innerHTML += activitiesCostTotal.toString();
 	});
 
-	const $creditCardPayment = $("#credit-card");
-	const $paypalMessage = $("[id='paypal message']");
-	const $bitcoinMessage = $("[id='bitcoin message']");
-
-	$paypalMessage.hide();
-	$bitcoinMessage.hide();
-
 	paymentMethod.addEventListener("change", (e) => {
 		let selected = e.target.value;
-
-		$creditCardPayment.hide();
-		$paypalMessage.hide();
-		$bitcoinMessage.hide();
 
 		selected == "credit card" ? $creditCardPayment.show() : $creditCardPayment.hide();
 		selected == "paypal" ? $paypalMessage.show() : $paypalMessage.hide();
@@ -133,24 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let letters = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-	let isNotValidEmail = (node) => {
-			return !letters.test(node.value);
-	}
+	let isNotValidEmail = (node) => !letters.test(node.value) ? true : false;
 
 	let setNodeBorderRed = (node) => {
 		return node.style['box-shadow'] = '0 0 5px 2px red';
 	}
 
 	email.addEventListener("keyup", (e) => {
-		if(isNotValidEmail(email)){
-			setNodeBorderRed(email);
-		}else{
-			email.style['box-shadow'] = '';
-		}
+		isNotValidEmail(email) ? setNodeBorderRed(email) : email.style['box-shadow'] = '';
 	});
-
-	const activityInputs = activities.getElementsByTagName('input');
-	const paymentOptions = paymentMethod.getElementsByTagName('option');
 
 	submitButton.addEventListener('click', (e) => {
 		e.preventDefault();
@@ -173,11 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 		let isValid = (x, condition) => {
-			if(isNotValidNumber(x) || condition){
-				setNodeBorderRed(x);
-			}else {
-				x.style['box-shadow'] = '';
-			}
+			(isNotValidNumber(x) || condition) ? setNodeBorderRed(x) : x.style['box-shadow'] = '';
 		}
 
 		//beginning of input checks

@@ -1,4 +1,4 @@
-'use strict'
+"use strict"
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	const tShirtDesignSelect = document.getElementById('design');
 	const tShirtDesignColor = document.getElementById('color');
 
-	const activities = document.getElementsByClassName("activities")[0];
+	const activities = document.getElementsByClassName('activities')[0];
 	const checkbox = activities.getElementsByTagName('input');
 	const activitiesCostTotalElement = document.getElementById('activitiesCostTotal');
 
 	const paymentMethod = document.getElementById('payment');
-	const creditCardPayment = document.getElementById('credit-card');
-	const bitcoinMessage = document.getElementById('bitcoin message');
-	const paypalMessage = document.getElementById('paypal message');
+	// const creditCardPayment = document.getElementById('credit-card');
+	// const bitcoinMessage = document.getElementById('bitcoin message');
+	// const paypalMessage = document.getElementById('paypal message');
 
 	const name = document.getElementById('name');
 	const email = document.getElementById('mail');
@@ -23,44 +23,50 @@ document.addEventListener('DOMContentLoaded', () => {
 	const cvv = document.getElementById('cvv');
 	const submitButton = document.querySelectorAll('button[type=submit]')[0];
 
+	const $colors_js_puns = $("#colors-js-puns");
+	const $other_title = $("#other-title");
+
+	document.getElementById('name').select();
 	//set the default value of the payment selector to 'credit card'
 	paymentMethod.value = "credit card";
 
-	//wait until shirt design is selected before displayed
-	document.getElementById('colors-js-puns').style.display = 'none';
-
 	//hide t-shirt design colors
-	document.getElementById('name').select();
+	//wait until shirt design is selected before displayed
+	$colors_js_puns.hide();
 
 	//no display until "other" job role is selected
-	otherTitle.style.display = "none";
+	$other_title.hide();
+	//Other job role open input when selected / deselected
+	userTitle.addEventListener("change", (e) => {
+		let selected = e.target.value;
+		selected == "other" ? $other_title.show() : $other_title.hide();;
+	});
 
 	//T-shirt infor design/color match function
 	tShirtDesignSelect.addEventListener("change", (e) => {
-
-		//making the color input visible for selection
-		document.getElementById('colors-js-puns').style.display = '';
-
 		let shirt = e.target.value;
+		//making the color input visibile for selection
+		$colors_js_puns.show();
 
-		let dontShowShirt = (x) => {
-			for(let i = 0; i < tShirtDesignColor.length; i++){
-				let shirt = tShirtDesignColor[i];
-				shirt.innerHTML.indexOf(x) != -1 ? shirt.style.display = "none" : shirt.style.display = "";
-			}
-		}
+		let showShirts = (x) => {
+			$colors_js_puns.show();
+		 	$("#color").html(x);
+		};
 
-		if(shirt == "select"){
-			for(let i = 0; i < tShirtDesignColor.length; i++){
-				tShirtDesignColor[i].style.display = "";
-			}
+		if(shirt == 'js puns'){
+			showShirts("<option value=\"cornflowerblue\">Cornflower Blue (JS Puns shirt only)</option>" +
+			"<option value=\"darkslategrey\">Dark Slate Grey (JS Puns shirt only)</option>" +
+			"<option value=\"gold\">Gold (JS Puns shirt only)</option>");
+		}else if (shirt == 'heart js') {
+			showShirts("<option value=\"tomato\">Tomato (I &#9829; JS shirt only)</option>" +
+			"<option value=\"steelblue\">Steel Blue (I &#9829; JS shirt only)</option>" +
+			"<option value=\"dimgrey\">Dim Grey (I &#9829; JS shirt only)</option>");
 		}else{
-			shirt == "js puns" ? dontShowShirt('I') : dontShowShirt('Puns');
+			$colors_js_puns.hide();
 		}
 	});
 
 	let activitiesCostTotal = 0;
-
 	//function to enabled / disable checkboxes when times and days are contradicting
 	activities.addEventListener("change", (e) => {
 
@@ -106,25 +112,23 @@ document.addEventListener('DOMContentLoaded', () => {
 		activitiesCostTotalElement.innerHTML += activitiesCostTotal.toString();
 	});
 
-	paypalMessage.style.display = "none";
-	bitcoinMessage.style.display = "none";
+	const $creditCardPayment = $("#credit-card");
+	const $paypalMessage = $("[id='paypal message']");
+	const $bitcoinMessage = $("[id='bitcoin message']");
+
+	$paypalMessage.hide();
+	$bitcoinMessage.hide();
 
 	paymentMethod.addEventListener("change", (e) => {
 		let selected = e.target.value;
 
-		creditCardPayment.style.display = "none";
-		paypalMessage.style.display = "none";
-		bitcoinMessage.style.display = "none";
+		$creditCardPayment.hide();
+		$paypalMessage.hide();
+		$bitcoinMessage.hide();
 
-		selected == "credit card" ? creditCardPayment.style.display = "" : creditCardPayment.style.display = "none";
-		selected == "paypal" ? paypalMessage.style.display = "" : paypalMessage.style.disaplay = "none";
-		selected == "bitcoin" ? bitcoinMessage.style.display = "" : bitcoinMessage.style.display = "none";
-	});
-
-	//Other job role open input when selected / deselected
-	userTitle.addEventListener("change", (e) => {
-		let selected = e.target.value;
-		selected == "other" ? otherTitle.style.display = "" : otherTitle.style.display = "none";
+		selected == "credit card" ? $creditCardPayment.show() : $creditCardPayment.hide();
+		selected == "paypal" ? $paypalMessage.show() : $paypalMessage.hide();
+		selected == "bitcoin" ? $bitcoinMessage.show() : $bitcoinMessage.hide();
 	});
 
 	let letters = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -185,10 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 
 		if(!name.value.length > 0){
-			errorMessage("A name has not been entered")
+			errorMessage("A name has not been entered");
 			setNodeBorderRed(name);
 		}else {
-			email.style['box-shadow'] = '';
+			name.style['box-shadow'] = '';
 		}
 
 		if (paymentMethod.value == 'credit card') {
